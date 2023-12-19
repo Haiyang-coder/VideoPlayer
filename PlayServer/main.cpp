@@ -4,6 +4,11 @@
 #include<functional>
 #include<memory.h>
 #include<sys/socket.h>
+#include<fcntl.h>
+#include<sys/stat.h>
+
+#include <csignal>
+
 
 
 class CFunctionBase
@@ -76,7 +81,8 @@ public:
 			//子进程
 			close(pipes[1]);//关闭写管道
 			pipes[1] = 0;
-			return (*m_func)();
+			ret = (*m_func)();
+			exit(0);
 		}
 		else
 		{
@@ -93,10 +99,11 @@ public:
 		//在主进程完成
 		msghdr msg;
 		iovec iov[2];
-		iov[0].iov_base = (char*)"send hello";
-		iov[0].iov_len = 11;
-		iov[1].iov_base = (char*)"send other";
-		iov[1].iov_len = 11;
+		char buf[2][20] = { "send hello","send other" };
+		iov[0].iov_base = buf[0];
+		iov[0].iov_len = 20;
+		iov[1].iov_base = buf[1];
+		iov[1].iov_len = 20;
 		msg.msg_iov = iov;
 		msg.msg_iovlen = 2;
 
@@ -143,6 +150,33 @@ public:
 		}
 		fd = *(int*)CMSG_DATA(cmsg);
 	}
+	static int SwitchDeamon()
+	{
+		pid_t ret = fork();
+		if (ret < 0)
+		{
+			return ret;
+		}
+		if (ret > 0)
+		{
+			exit(0);//主进程直接退出
+		}
+		//子进程的内容
+		ret = setsid();
+		if (ret == -1) return -2;
+		ret = fork();
+		if (ret == -1) return-3;
+		if (ret > 0) exit(0);//子进程的使命也完成了，退出
+		//现在只剩下了孙进城了，就进入了守护状态了
+		for (size_t i = 0; i < 3; i++)
+		{
+			close(i);
+		}
+		umask(0);
+		signal(SIGCHLD, SIG_IGN);  // 防止子进程变成僵尸进程
+		return 0;
+	}
+
 private:
 	CFunctionBase* m_func;
 	pid_t m_pid;
@@ -152,19 +186,63 @@ private:
 
 int CreateLogServer(CProcess* proc)
 {
+	printf("%s(%d):<%s>  pid = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid());
 	return 0;
 }
 int CreateClientServer(CProcess* proc)
 {
+	printf("%s(%d):<%s>  pid = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid());
+	int fd = -1;
+	int ret = proc->RecvFd(fd);
+	if (ret < 0)
+	{
+		printf("%s(%d):<%s>  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, ret);
+		return 0;
+	}
+	sleep(1);
+	char buffer[20];
+	lseek(fd, 0, SEEK_SET);
+	read(fd, buffer, 20);
+	printf("%s(%d):<%s>  buffer = %s\n", __FILE__, __LINE__, __FUNCTION__, buffer);
+	printf("%s(%d):<%s>  fd = %d\n", __FILE__, __LINE__, __FUNCTION__, fd);
+	
 	return 0;
 }
 
+
+
+
 int main()
 {
+	//CProcess::SwitchDeamon();
 	CProcess procLog, procClient;
+	printf("%s(%d):<%s>  pid = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid());
 	procLog.SetEntryFunction(CreateLogServer, &procLog);
 	int ret = procLog.CreateSubProcess();
+	if (ret < 0)
+	{
+		printf("%s(%d):<%s>  pid = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid());
+		return ret;
+	}
+	printf("%s(%d):<%s>  pid = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid());
 	procClient.SetEntryFunction(CreateClientServer, &procClient);
 	ret = procClient.CreateSubProcess();
+	if (ret < 0)
+	{
+		printf("%s(%d):<%s>  pid = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid());
+		return ret;
+	}
+	printf("%s(%d):<%s>  pid = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid());
+
+	int fd = open("./text.txt", O_RDWR | O_CREAT | O_APPEND);
+	printf("%s(%d):<%s>  fd = %d\n", __FILE__, __LINE__, __FUNCTION__, fd);
+	if (fd < 0) return -3;
+	ret  = write(fd, "hello", 5);
+	ret = procClient.SendFD(fd);
+	if (ret < 0)
+	{
+		return ret;
+	}
+	close(fd);
     return 0;
 }
