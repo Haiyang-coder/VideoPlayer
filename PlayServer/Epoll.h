@@ -20,7 +20,7 @@ public:
 	{ 
 		m_data.u64 = epoll.m_data.u64;//联合体的赋值，直接给最大的赋值
 	}
-	~EpollData();
+	~EpollData(){}
 
 public:
 	EpollData& operator=(const EpollData& epoll)
@@ -82,12 +82,12 @@ public:
 	{
 		if (m_epoll < 0)
 		{
-			return m_epoll;
+			return -1;
 		}
 		m_epoll = epoll_create(count);
 		if (m_epoll < 0)
 		{
-			return m_epoll;
+			return -2;
 		}
 		return SUCCESS;
 	}
@@ -143,8 +143,9 @@ public:
 	{
 		if (m_epoll != -1)
 		{
-			close(m_epoll);
+			int fd = m_epoll;
 			m_epoll = -1;
+			close(fd);
 		}
 	}
 
