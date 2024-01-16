@@ -45,6 +45,7 @@ int CreateClientServer(CProcess* proc)
 
 int main()
 {
+	//开启守护进程
 	CProcess::SwitchDeamon();
 	CProcess procLog, procClient;
 	printf("%s(%d):<%s>  pid = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid());
