@@ -79,6 +79,7 @@
     <ClCompile Include="Thread.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Loggere.h" />
     <ClInclude Include="Socket.h" />
     <ClInclude Include="Epoll.h" />
     <ClInclude Include="Function.h" />

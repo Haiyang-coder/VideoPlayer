@@ -10,6 +10,8 @@ class Buffer : public std::string
 {
 public:
 	Buffer(size_t size) : std::string() { resize(size); }
+	Buffer(const std::string& str) : std::string(str) {  }
+	Buffer(const char* str) : std::string(str) {  }
 	Buffer() : std::string() {}
 	~Buffer(){}
 
@@ -154,6 +156,8 @@ public:
 			close(fd);
 		}
 	}
+	virtual operator int() { return m_socket; }
+	virtual operator int() const{ return m_socket; }
 protected:
 	//Ì×½Ó×ÖÃèÊö·û -1
 	int m_socket;

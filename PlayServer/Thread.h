@@ -17,7 +17,7 @@ public:
 	}
 	template<typename _FUNCTION_, typename... _ARGS_>
 	CThread(_FUNCTION_ func, _ARGS_... args):m_pfunction(new CFunction<_FUNCTION_, _ARGS_...>(func, args...))
-	{
+	{ 
 		
 	}
 	~CThread();
@@ -76,6 +76,25 @@ public:
 		}
 		return 0;
 	}
+
+	int Pause()
+	{
+		if (m_thread != 0) return -1;
+		if (m_bpause)
+		{
+			m_bpause = false;
+			return 0;
+		}
+		m_bpause = true;
+		int ret = pthread_kill(m_thread, SIGUSR1);
+		if (ret != 0)
+		{
+			m_bpause = false;
+			return -2;
+		}
+	}
+
+	bool isValid() const { return m_thread == 0; }
 private:
 	//类成员函数默认_thiscall(会隐式传递对象的指针),如果函数是静态的就是_stdcall
 	static void* ThreadEntry(void* arg)
@@ -98,22 +117,7 @@ private:
 		thiz->m_thread = 0;
 		pthread_exit(NULL);
 	}
-	int Pause()
-	{
-		if (m_thread != 0) return -1;
-		if (m_bpause)
-		{
-			m_bpause = false;
-			return 0;
-		}
-		m_bpause = true;
-		int ret = pthread_kill(m_thread, SIGUSR1);
-		if (ret != 0)
-		{
-			m_bpause = false;
-			return -2;
-		}
-	}
+	
 	static void Sigaction(int signo, siginfo_t* info, void* context)
 	{
 		if (signo == SIGUSR1)
@@ -152,7 +156,7 @@ private:
 
 	}
 
-	bool isValid() const { return m_thread == 0; }
+	
 private:
 	CFunctionBase* m_pfunction;
 	pthread_t m_thread;
