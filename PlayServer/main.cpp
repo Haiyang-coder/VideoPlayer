@@ -8,14 +8,24 @@
 #include <csignal>
 #include"Process.h"
 
+#include"Loggere.h"
 
+int LogTest()
+{
 
+}
 
 
 
 int CreateLogServer(CProcess* proc)
 {
-	printf("%s(%d):<%s>  pid = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid());
+	//printf("%s(%d):<%s>  pid = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid());
+	CLoggerServer server;
+	int ret = server.Start();
+	if(ret != 0)
+	{
+		printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno));
+	}
 	return 0;
 }
 
