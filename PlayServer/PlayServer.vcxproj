@@ -75,6 +75,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
+    <ClCompile Include="Loggere.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Thread.cpp" />
   </ItemGroup>
@@ -86,7 +87,11 @@
     <ClInclude Include="Process.h" />
     <ClInclude Include="Thread.h" />
   </ItemGroup>
-  <ItemDefinitionGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Link>
+      <LibraryDependencies>pthread;m;</LibraryDependencies>
+    </Link>
+  </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
 </Project>

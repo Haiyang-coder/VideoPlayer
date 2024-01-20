@@ -151,6 +151,7 @@ public:
 		m_status = 3;
 		if (m_socket != -1)
 		{
+			unlink(m_param.ip);
 			int fd = m_socket;
 			m_socket = -1;
 			close(fd);
@@ -177,6 +178,7 @@ public:
 	CLocalSocket(int sock):CSocketBase()
 	{
 		m_socket = sock;
+	
 	}
 	virtual ~CLocalSocket()
 	{
@@ -186,16 +188,20 @@ public:
 	//初始化服务器，套接字创建，绑定，监听， 客户端只有创建
 	virtual int Init(const CSockParam& param)
 	{
-		if (m_status != 0) return -1;
+		if (m_status != 0)
+		{
+			printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  m_status = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), m_status);
+			return -1;
+		}
 		m_param = param;
 		int type = (m_param.arrt  & SOCK_ISUDP) ?  SOCK_DGRAM : SOCK_STREAM;
 		if (m_socket == -1)
 		{
 			m_socket = socket(PF_LOCAL, type, 0);
-			if (m_socket == -1)
-			{
-				return -2;
-			}
+		}
+		else
+		{
+			m_status = 2;
 		}
 		
 		int ret = 0;
@@ -218,18 +224,25 @@ public:
 			ret = fcntl(m_socket, F_SETFL, option);
 			if (ret < 0) return -6;
 		}
-		m_status = 1;
+		if (m_status == 0)
+		{
+			m_status = 1;
+		}
+		
 		return 0;
 	}
 	//连接: 服务器：accept 客户端：connect; udp直接返回成功
 	virtual int Link(CSocketBase** ppClient = NULL)
 	{
 		if (m_status <= 0 || m_socket == -1) return -1;
-		if (ppClient == NULL) return -2;
-		CSockParam param;
-		int ret = -1;
+		int ret = 0;
 		if (m_param.arrt & SOCK_ISSERVER)
 		{
+			if (ppClient == NULL)
+			{
+				return -2;
+			}
+			CSockParam param;
 			sockaddr_un addr_un;
 			socklen_t len = sizeof(addr_un);
 			int fd = accept(m_socket, param.addrun(), &len);
@@ -259,6 +272,8 @@ public:
 	//发送数据
 	virtual int Send(const Buffer& data)
 	{
+		printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s len = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), data.size());
+		printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s len = %s\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), data.c_str());
 		if (m_status < 2 || m_socket == -1) return -1;
 		size_t index = 0;//size_t是无符号的，ssize_t是有符号的
 		while (index < data.size())
@@ -278,6 +293,7 @@ public:
 			}
 			
 		}
+		return 0;
 		
 
 	}

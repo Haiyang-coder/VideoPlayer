@@ -70,7 +70,7 @@ class CEpoll
 {
 public:
 
-	CEpoll() { m_epoll = -1; }
+	CEpoll() { m_epoll = 0; }
 	~CEpoll() { Close(); }
 	CEpoll(const CEpoll&) = delete;
 	CEpoll& operator= (const CEpoll&) = delete;
@@ -93,7 +93,7 @@ public:
 	}
 
 	//…Ë÷√epollµ»¥˝
-	ssize_t WaitEvents(EPEvents& events, int timeout = 10)
+	ssize_t WaitEvents(EPEvents& events, int timeout = 0)
 	{
 		if (m_epoll < 0) return m_epoll;
 		EPEvents evs(EVENTS_SIZE);
@@ -102,6 +102,7 @@ public:
 		{
 			if (errno == EINTR || errno == EAGAIN)
 			{
+				printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
 				return 0;
 			}
 			return -2;

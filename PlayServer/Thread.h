@@ -20,7 +20,7 @@ public:
 	{ 
 		
 	}
-	~CThread();
+	~CThread() {}
 
 	CThread(const CThread&) = delete;
 	CThread& operator= (const CThread&) = delete;
@@ -29,6 +29,7 @@ public:
 	int SetThreadFunc(_FUNCTION_ func, _ARGS_... args)
 	{
 		m_pfunction = new CFunction<_FUNCTION_, _ARGS_...>(func, args...);
+		return 0;
 	}
 
 	int Start()
@@ -40,6 +41,7 @@ public:
 		4.inherit scheduling attributes（继承调度属性）： inheritsched 成员变量可以用来指定线程是否继承创建它的线程的调度属性。
 		5.scope（线程作用域）： 通过 scope 成员变量，可以设置线程的作用域，可以是系统范围（PTHREAD_SCOPE_SYSTEM）或进程范围（PTHREAD_SCOPE_PROCESS）。
 		*/
+		//printf("%s(%d):<%s> \n", __FILE__, __LINE__, __FUNCTION__);
 		pthread_attr_t attr;
 		int ret = pthread_attr_init(&attr);
 		if (ret != 0) return -1;
@@ -54,6 +56,7 @@ public:
 		m_mapThread[m_thread] = this;
 		ret = pthread_attr_destroy(&attr);
 		if (ret != 0) return -5;
+		//printf("%s(%d):<%s> \n", __FILE__, __LINE__, __FUNCTION__);
 		return 0;
 	}
 
@@ -94,7 +97,7 @@ public:
 		}
 	}
 
-	bool isValid() const { return m_thread == 0; }
+	bool isValid() const { return m_thread != 0; }
 private:
 	//类成员函数默认_thiscall(会隐式传递对象的指针),如果函数是静态的就是_stdcall
 	static void* ThreadEntry(void* arg)

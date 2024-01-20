@@ -125,10 +125,11 @@ public:
 		//现在只剩下了孙进城了，就进入了守护状态了
 		for (size_t i = 0; i < 3; i++)
 		{
-			close(i);
+			//close(i);
 		}
 		umask(0);
 		signal(SIGCHLD, SIG_IGN);  // 防止子进程变成僵尸进程
+		printf("%s(%d):<%s>  pid = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid());
 		return 0;
 	}
 
