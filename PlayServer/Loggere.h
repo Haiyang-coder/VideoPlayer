@@ -119,10 +119,11 @@ public:
 	static void Trace(const LogInfo& info)
 	{
 		static thread_local CLocalSocket client;
+		printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s client=%d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), (int)client);
 		int ret = 0;
 		if (client == -1)
 		{
-			
+			printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s %s\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), "client == -1");
 			ret = client.Init(CSockParam("./log/server.socket", 0));
 			if (ret != 0)
 			{
@@ -186,6 +187,7 @@ private:
 					}
 					if (events[i].events & EPOLLIN)
 					{
+						printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  epollin =%s\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), "============¼ì²âµ½epollinÊÂ¼þ");
 						if (events[i].data.ptr == m_pServer)
 						{
 							CSocketBase* pClient = NULL;
@@ -194,7 +196,7 @@ private:
 							printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d socket = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), r, (int)*pClient);
 							if (r < 0) continue;
 							r = m_epoll.Add(*pClient, EpollData((void*)pClient), EPOLLIN | EPOLLERR);
-							printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), r);
+							printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d clientSocket = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), r, (int)*pClient);
 							if (r < 0)
 							{
 								printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), r);

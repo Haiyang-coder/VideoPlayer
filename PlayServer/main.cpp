@@ -12,8 +12,9 @@
 int LogTest()
 {
 	sleep(5);
+	printf("%s(%d):<%s>  pid = %d %s \n" , __FILE__, __LINE__, __FUNCTION__, getpid(), "trace start");
 	char buffer[] = "hell !d大大啊爱看";
-	TRACEI("here is log  大大 释放 ");
+	TRACEI("here is log  大大 释放 \n");
 	//printf("%s(%d):<%s>  pid = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid());
 	//DUMPD((void*)buffer,sizeof(buffer));
 	//printf("%s(%d):<%s>  pid = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid());
@@ -38,7 +39,7 @@ int CreateLogServer(CProcess* proc)
 	while (true)
 	{
 		ret = proc->RecvFd(fd);
-		if (fd == -1 )
+		if (fd <= -1 )
 		{
 			break;
 		}
@@ -103,5 +104,6 @@ int main()
 	//close(fd);
 	ret = procLog.SendFD(-1);
 	printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
+	getchar();
     return 0;
 }

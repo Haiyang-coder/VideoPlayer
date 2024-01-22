@@ -197,6 +197,7 @@ public:
 		int type = (m_param.arrt  & SOCK_ISUDP) ?  SOCK_DGRAM : SOCK_STREAM;
 		if (m_socket == -1)
 		{
+			printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno));
 			m_socket = socket(PF_LOCAL, type, 0);
 		}
 		else
@@ -207,6 +208,7 @@ public:
 		int ret = 0;
 		if (m_param.arrt & SOCK_ISSERVER)
 		{
+			printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno));
 			ret = bind(m_socket, m_param.addrun(), sizeof(sockaddr_un));
 			if (ret == -1)
 			{
@@ -218,6 +220,7 @@ public:
 
 		if (m_param.arrt & SOCK_ISNOBLOCK)
 		{
+			printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno));
 			int option = fcntl(m_socket, F_GETFL);
 			if (option < 0) return -5;
 			option |= O_NONBLOCK;
@@ -226,9 +229,10 @@ public:
 		}
 		if (m_status == 0)
 		{
+			printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno));
 			m_status = 1;
 		}
-		
+		printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  m_socket = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), m_socket);
 		return 0;
 	}
 	//连接: 服务器：accept 客户端：connect; udp直接返回成功
@@ -246,6 +250,7 @@ public:
 			sockaddr_un addr_un;
 			socklen_t len = sizeof(addr_un);
 			int fd = accept(m_socket, param.addrun(), &len);
+			printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  m_socket = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), m_socket);
 			if (fd == -1) return -3;
 			*ppClient = new CLocalSocket(fd);
 			if (*ppClient == NULL)
@@ -255,6 +260,7 @@ public:
 			ret = (*ppClient)->Init(param);
 			if (ret != 0)
 			{
+				printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
 				delete* ppClient;
 				*ppClient = NULL;
 				return -5;
@@ -266,6 +272,7 @@ public:
 			if (ret != 0) return -6;
 		}
 		m_status = 2;
+		printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  m_socket = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), m_socket);
 		return 0;
 
 	}
@@ -273,7 +280,8 @@ public:
 	virtual int Send(const Buffer& data)
 	{
 		printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s len = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), data.size());
-		printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s len = %s\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), data.c_str());
+		printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s data = %s\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), data.c_str());
+		printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s socket = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), m_socket);
 		if (m_status < 2 || m_socket == -1) return -1;
 		size_t index = 0;//size_t是无符号的，ssize_t是有符号的
 		while (index < data.size())
