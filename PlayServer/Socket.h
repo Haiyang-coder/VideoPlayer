@@ -16,12 +16,12 @@ public:
 	~Buffer(){}
 
 public:
-	//¸ø·Ç³£Á¿¶ÔÏóÊ¹ÓÃ
+	//ç»™éå¸¸é‡å¯¹è±¡ä½¿ç”¨
 	operator char* ()
 	{
 		return const_cast<char*>(c_str());
 	}
-	//¸ø³£Á¿¶ÔÏóÊ¹ÓÃ
+	//ç»™å¸¸é‡å¯¹è±¡ä½¿ç”¨
 	operator char* () const
 	{
 		return const_cast<char*>(c_str());
@@ -40,9 +40,9 @@ private:
 };
 
 enum SOCKATTR {
-	SOCK_ISSERVER = 1,//0ÊÇ¿Í»§¶Ë 1ÊÇ·şÎñÆ÷ 
-	SOCK_ISNOBLOCK = 2,//0ÊÇ×èÈû 1ÊÇ·Ç×èÈû
-	SOCK_ISUDP = 4, //0ÊÇtcp 1ÊÇudp
+	SOCK_ISSERVER = 1,//0æ˜¯å®¢æˆ·ç«¯ 1æ˜¯æœåŠ¡å™¨ 
+	SOCK_ISNOBLOCK = 2,//0æ˜¯é˜»å¡ 1æ˜¯éé˜»å¡
+	SOCK_ISUDP = 4, //0æ˜¯tcp 1æ˜¯udp
 };
 
 class CSockParam
@@ -55,7 +55,7 @@ public:
 		port = -1;
 		arrt = 0;
 	}
-	//ÍøÂçÌ×½Ó×ÖµÄ³õÊ¼»¯
+	//ç½‘ç»œå¥—æ¥å­—çš„åˆå§‹åŒ–
 	CSockParam(const Buffer& ip, short port, int attr)
 	{
 		this->ip = ip;
@@ -66,7 +66,7 @@ public:
 		m_addr_in.sin_addr.s_addr = inet_addr(ip);
 		
 	}
-	//±¾µØÌ×½Ó×ÖµÄ³õÊ¼»¯
+	//æœ¬åœ°å¥—æ¥å­—çš„åˆå§‹åŒ–
 	CSockParam(const Buffer& path, int attr)
 	{
 		ip = path;
@@ -107,14 +107,14 @@ public:
 		return (sockaddr*)&m_addr_un;
 	}
 public:
-	//µØÖ·
+	//åœ°å€
 	sockaddr_in m_addr_in;
 	sockaddr_un m_addr_un;
 	//ip
 	Buffer ip;
-	//¶Ë¿Ú
+	//ç«¯å£
 	short port;
-	//ÊÇ·ñ×èÈû
+	//æ˜¯å¦é˜»å¡
 	int arrt;
 
 
@@ -135,17 +135,17 @@ public:
 	{
 		Close();
 		
-	}//ºÍ¹¹Ôìº¯ÊıµÄË³ĞòÏà·´,ÏÈÎö¹¹×ÓÀà
+	}//å’Œæ„é€ å‡½æ•°çš„é¡ºåºç›¸å,å…ˆææ„å­ç±»
 public:
-	//³õÊ¼»¯·şÎñÆ÷£¬Ì×½Ó×Ö´´½¨£¬°ó¶¨£¬¼àÌı£¬ ¿Í»§¶ËÖ»ÓĞ´´½¨
+	//åˆå§‹åŒ–æœåŠ¡å™¨ï¼Œå¥—æ¥å­—åˆ›å»ºï¼Œç»‘å®šï¼Œç›‘å¬ï¼Œ å®¢æˆ·ç«¯åªæœ‰åˆ›å»º
 	virtual int Init(const CSockParam& param) = 0;
-	//Á¬½Ó: ·şÎñÆ÷£ºaccept ¿Í»§¶Ë£ºconnect; udpÖ±½Ó·µ»Ø³É¹¦
+	//è¿æ¥: æœåŠ¡å™¨ï¼šaccept å®¢æˆ·ç«¯ï¼šconnect; udpç›´æ¥è¿”å›æˆåŠŸ
 	virtual int Link(CSocketBase** ppClient = NULL) = 0;
-	//·¢ËÍÊı¾İ
+	//å‘é€æ•°æ®
 	virtual int Send(const Buffer& data) = 0;
-	//½ÓÊÕÊı¾İ
+	//æ¥æ”¶æ•°æ®
 	virtual int Recv(Buffer& data) = 0;
-	//¹Ø±ÕÁ¬½Ó
+	//å…³é—­è¿æ¥
 	virtual int Close()
 	{
 		m_status = 3;
@@ -160,11 +160,11 @@ public:
 	virtual operator int() { return m_socket; }
 	virtual operator int() const{ return m_socket; }
 protected:
-	//Ì×½Ó×ÖÃèÊö·û -1
+	//å¥—æ¥å­—æè¿°ç¬¦ -1
 	int m_socket;
-	//×´Ì¬0³õÊ¼»¯Î´Íê³É£¬ 1³õÊ¼»¯Íê³É 2Á¬½ÓÍê³É 3ÒÑ¾­¹Ø±Õ
+	//çŠ¶æ€0åˆå§‹åŒ–æœªå®Œæˆï¼Œ 1åˆå§‹åŒ–å®Œæˆ 2è¿æ¥å®Œæˆ 3å·²ç»å…³é—­
 	int m_status;
-	//³õÊ¼»¯µÄ²ÎÊı
+	//åˆå§‹åŒ–çš„å‚æ•°
 	CSockParam m_param;
 
 
@@ -185,7 +185,7 @@ public:
 		Close();
 	}
 public:
-	//³õÊ¼»¯·şÎñÆ÷£¬Ì×½Ó×Ö´´½¨£¬°ó¶¨£¬¼àÌı£¬ ¿Í»§¶ËÖ»ÓĞ´´½¨
+	//åˆå§‹åŒ–æœåŠ¡å™¨ï¼Œå¥—æ¥å­—åˆ›å»ºï¼Œç»‘å®šï¼Œç›‘å¬ï¼Œ å®¢æˆ·ç«¯åªæœ‰åˆ›å»º
 	virtual int Init(const CSockParam& param)
 	{
 		if (m_status != 0)
@@ -208,6 +208,7 @@ public:
 		int ret = 0;
 		if (m_param.arrt & SOCK_ISSERVER)
 		{
+			//è·³è½¬çš„ä¸å‡† å¾€ä¸‹æ‹‰
 			printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno));
 			ret = bind(m_socket, m_param.addrun(), sizeof(sockaddr_un));
 			if (ret == -1)
@@ -235,7 +236,7 @@ public:
 		printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  m_socket = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), m_socket);
 		return 0;
 	}
-	//Á¬½Ó: ·şÎñÆ÷£ºaccept ¿Í»§¶Ë£ºconnect; udpÖ±½Ó·µ»Ø³É¹¦
+	//è¿æ¥: æœåŠ¡å™¨ï¼šaccept å®¢æˆ·ç«¯ï¼šconnect; udpç›´æ¥è¿”å›æˆåŠŸ
 	virtual int Link(CSocketBase** ppClient = NULL)
 	{
 		if (m_status <= 0 || m_socket == -1) return -1;
@@ -250,8 +251,10 @@ public:
 			sockaddr_un addr_un;
 			socklen_t len = sizeof(addr_un);
 			int fd = accept(m_socket, param.addrun(), &len);
+			//ç¨ç­‰ æˆ‘çœ‹ä¸€ä¸‹çº¿ç¨‹å· æ˜¯å¯¹ å°±æ˜¯è¿™é‡Œ accpetæˆåŠŸäº†
 			printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  m_socket = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), m_socket);
 			if (fd == -1) return -3;
+			//è¿™é‡Œå°±æ˜¯æˆ‘è¯´çš„ appcetå®Œäº†ä¹‹å åˆåˆ›å»ºäº†ä¸€ä¸ªæ”¶æ•°æ®çš„socket
 			*ppClient = new CLocalSocket(fd);
 			if (*ppClient == NULL)
 			{
@@ -272,40 +275,42 @@ public:
 			if (ret != 0) return -6;
 		}
 		m_status = 2;
+
+		//è¿™é‡Œsocket=6æ˜¯ç›‘å¬å¥—æ¥å­—  
 		printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  m_socket = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), m_socket);
 		return 0;
 
 	}
-	//·¢ËÍÊı¾İ
+	//å‘é€æ•°æ®
 	virtual int Send(const Buffer& data)
 	{
 		printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s len = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), data.size());
 		printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s data = %s\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), data.c_str());
 		printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s socket = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), m_socket);
 		if (m_status < 2 || m_socket == -1) return -1;
-		size_t index = 0;//size_tÊÇÎŞ·ûºÅµÄ£¬ssize_tÊÇÓĞ·ûºÅµÄ
+		size_t index = 0;//size_tæ˜¯æ— ç¬¦å·çš„ï¼Œssize_tæ˜¯æœ‰ç¬¦å·çš„
 		while (index < data.size())
 		{
 			ssize_t len = write(m_socket, (char*)data + index, data.size() - index);
 			if (len == 0)
 			{
-				//Á¬½ÓÒÑ¾­¹Ø±ÕÁË
+				//è¿æ¥å·²ç»å…³é—­äº†
 				return -2;
 			}
 			else if (len < 0) {
-				//·¢ËÍÊ§°ÜÁË
+				//å‘é€å¤±è´¥äº†ç”µè¯æ‰“ä¸äº†ï¼Œæˆ‘è¿™ä¸å¥½è¯´è¯
 				return -3;
 			}else
 			{
 				index += len;
 			}
-			
+			printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), len);
 		}
 		return 0;
 		
 
 	}
-	//½ÓÊÕÊı¾İ
+	//æ¥æ”¶æ•°æ®
 	virtual int Recv(Buffer& data)
 	{
 		if (m_status <= 0 || m_socket == -1) return -1;
@@ -319,22 +324,22 @@ public:
 		{
 			if (errno == EINTR || errno == EAGAIN)
 			{
-				//ÕâÊÇ·Ç×èÈûÄ£Ê½ÏÂ±»ÖĞ¶ÏµÄÇé¿ö
+				//è¿™æ˜¯éé˜»å¡æ¨¡å¼ä¸‹è¢«ä¸­æ–­çš„æƒ…å†µ
 				data.clear();
-				//Ã»ÓĞÊÕµ½Êı¾İ
+				//æ²¡æœ‰æ”¶åˆ°æ•°æ®
 				return 0;
 			}
 			else
 			{
-				//·¢Éú´íÎó
+				//å‘ç”Ÿé”™è¯¯
 				return -2;
 			}
 		}
-		//Ì×½Ó×Ö±»¹Ø±ÕÁË
+		//å¥—æ¥å­—è¢«å…³é—­äº†
 		return -3;
 		
 	}
-	//¹Ø±ÕÁ¬½Ó
+	//å…³é—­è¿æ¥
 	virtual int Close() { return CSocketBase::Close(); }
 
 };

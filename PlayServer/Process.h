@@ -33,16 +33,16 @@ public:
 		if (pid == -1) return -3;
 		if (pid == 0)
 		{
-			//вс╫ЬЁл
-			close(pipes[1]);//╧ь╠уп╢╧э╣ю
+			//Е╜░Х©⌡Г╗▀
+			close(pipes[1]);//Е┘ЁИ≈╜Е├≥Г╝║И│⌠
 			pipes[1] = 0;
 			ret = (*m_func)();
 			exit(0);
 		}
 		else
 		{
-			//жВ╫ЬЁл
-			close(pipes[0]);//╧ь╠у╤а╧э╣ю
+			//Д╦╩Х©⌡Г╗▀
+			close(pipes[0]);//Е┘ЁИ≈╜Х╞╩Г╝║И│⌠
 			pipes[0] = 0;
 			m_pid = pid;
 			return 0;
@@ -51,7 +51,7 @@ public:
 
 	int SendFD(int fd)
 	{
-		//тзжВ╫ЬЁлмЙЁи
+		//Е°╗Д╦╩Х©⌡Г╗▀Е╝▄Ф┬░
 		msghdr msg;
 		iovec iov[2];
 		char buf[2][20] = { "send hello","send other" };
@@ -114,21 +114,21 @@ public:
 		}
 		if (ret > 0)
 		{
-			exit(0);//жВ╫ЬЁлж╠╫смкЁЖ
+			exit(0);//Д╦╩Х©⌡Г╗▀Г⌡╢Ф▌╔И──Е┤╨
 		}
-		//вс╫ЬЁл╣ддзхщ
+		//Е╜░Х©⌡Г╗▀Г └Е├┘Е╝╧
 		ret = setsid();
 		if (ret == -1) return -2;
 		ret = fork();
 		if (ret == -1) return-3;
-		if (ret > 0) exit(0);//вс╫ЬЁл╣дй╧цЭр╡мЙЁиакё╛мкЁЖ
-		//ожтзж╩йёобаккО╫ЬЁгакё╛╬м╫ЬхКакйь╩╓в╢л╛ак
+		if (ret > 0) exit(0);//Е╜░Х©⌡Г╗▀Г └Д╫©Е▒╫Д╧÷Е╝▄Ф┬░Д╨├О╪▄И──Е┤╨
+		//Г▌╟Е°╗Е▐╙Е┴╘Д╦▀Д╨├Е╜≥Х©⌡Е÷▌Д╨├О╪▄Е╟╠Х©⌡Е┘╔Д╨├Е╝┬Ф┼╓Г┼╤Ф─│Д╨├//Ф┴╬Д╦▀epollГ └Д╫█Г╫╝
 		for (size_t i = 0; i < 3; i++)
 		{
 			//close(i);
 		}
 		umask(0);
-		signal(SIGCHLD, SIG_IGN);  // ╥юж╧вс╫ЬЁл╠ДЁи╫╘й╛╫ЬЁл
+		signal(SIGCHLD, SIG_IGN);  // И≤╡Ф╜╒Е╜░Х©⌡Г╗▀Е▐≤Ф┬░Е┐╣Е╟╦Х©⌡Г╗▀
 		printf("%s(%d):<%s>  pid = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid());
 		return 0;
 	}

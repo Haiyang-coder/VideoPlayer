@@ -35,21 +35,21 @@ public:
 	int Start()
 	{
 		/*
-		1.stacksize£¨¶ÑÕ»´óĞ¡£©£º ¿ÉÒÔÍ¨¹ıÉèÖÃ stacksize ³ÉÔ±±äÁ¿À´Ö¸¶¨Ïß³ÌµÄ¶ÑÕ»´óĞ¡¡£Õâ¶ÔÓÚ¿ØÖÆÏß³ÌµÄÄÚ´æÊ¹ÓÃ·Ç³£ÓĞÓÃ¡£
-		2.detachstate£¨·ÖÀë×´Ì¬£©£º Í¨¹ıÉèÖÃ detachstate ³ÉÔ±±äÁ¿£¬¿ÉÒÔÖ¸¶¨Ïß³ÌÊÇ¿É½áºÏ£¨joinable£©»¹ÊÇ·ÖÀë£¨detached£©¡£¿É½áºÏµÄÏß³Ì¿ÉÒÔ±»ÆäËûÏß³ÌµÈ´ı£¨join£©£¬¶ø·ÖÀëµÄÏß³ÌÔÚÍË³öÊ±»á×Ô¶¯ÊÍ·Å×ÊÔ´¡£
-		3.scheduling parameters£¨µ÷¶È²ÎÊı£©£º ¿ÉÒÔÍ¨¹ıÉèÖÃ schedparam ³ÉÔ±±äÁ¿À´Ö¸¶¨Ïß³ÌµÄµ÷¶È²ÎÊı£¬ÀıÈçÓÅÏÈ¼¶¡£
-		4.inherit scheduling attributes£¨¼Ì³Ğµ÷¶ÈÊôĞÔ£©£º inheritsched ³ÉÔ±±äÁ¿¿ÉÒÔÓÃÀ´Ö¸¶¨Ïß³ÌÊÇ·ñ¼Ì³Ğ´´½¨ËüµÄÏß³ÌµÄµ÷¶ÈÊôĞÔ¡£
-		5.scope£¨Ïß³Ì×÷ÓÃÓò£©£º Í¨¹ı scope ³ÉÔ±±äÁ¿£¬¿ÉÒÔÉèÖÃÏß³ÌµÄ×÷ÓÃÓò£¬¿ÉÒÔÊÇÏµÍ³·¶Î§£¨PTHREAD_SCOPE_SYSTEM£©»ò½ø³Ì·¶Î§£¨PTHREAD_SCOPE_PROCESS£©¡£
+		1.stacksizeï¼ˆå †æ ˆå¤§å°ï¼‰ï¼š å¯ä»¥é€šè¿‡è®¾ç½® stacksize æˆå‘˜å˜é‡æ¥æŒ‡å®šçº¿ç¨‹çš„å †æ ˆå¤§å°ã€‚è¿™å¯¹äºæ§åˆ¶çº¿ç¨‹çš„å†…å­˜ä½¿ç”¨éå¸¸æœ‰ç”¨ã€‚
+		2.detachstateï¼ˆåˆ†ç¦»çŠ¶æ€ï¼‰ï¼š é€šè¿‡è®¾ç½® detachstate æˆå‘˜å˜é‡ï¼Œå¯ä»¥æŒ‡å®šçº¿ç¨‹æ˜¯å¯ç»“åˆï¼ˆjoinableï¼‰è¿˜æ˜¯åˆ†ç¦»ï¼ˆdetachedï¼‰ã€‚å¯ç»“åˆçš„çº¿ç¨‹å¯ä»¥è¢«å…¶ä»–çº¿ç¨‹ç­‰å¾…ï¼ˆjoinï¼‰ï¼Œè€Œåˆ†ç¦»çš„çº¿ç¨‹åœ¨é€€å‡ºæ—¶ä¼šè‡ªåŠ¨é‡Šæ”¾èµ„æºã€‚
+		3.scheduling parametersï¼ˆè°ƒåº¦å‚æ•°ï¼‰ï¼š å¯ä»¥é€šè¿‡è®¾ç½® schedparam æˆå‘˜å˜é‡æ¥æŒ‡å®šçº¿ç¨‹çš„è°ƒåº¦å‚æ•°ï¼Œä¾‹å¦‚ä¼˜å…ˆçº§ã€‚
+		4.inherit scheduling attributesï¼ˆç»§æ‰¿è°ƒåº¦å±æ€§ï¼‰ï¼š inheritsched æˆå‘˜å˜é‡å¯ä»¥ç”¨æ¥æŒ‡å®šçº¿ç¨‹æ˜¯å¦ç»§æ‰¿åˆ›å»ºå®ƒçš„çº¿ç¨‹çš„è°ƒåº¦å±æ€§ã€‚
+		5.scopeï¼ˆçº¿ç¨‹ä½œç”¨åŸŸï¼‰ï¼š é€šè¿‡ scope æˆå‘˜å˜é‡ï¼Œå¯ä»¥è®¾ç½®çº¿ç¨‹çš„ä½œç”¨åŸŸï¼Œå¯ä»¥æ˜¯ç³»ç»ŸèŒƒå›´ï¼ˆPTHREAD_SCOPE_SYSTEMï¼‰æˆ–è¿›ç¨‹èŒƒå›´ï¼ˆPTHREAD_SCOPE_PROCESSï¼‰ã€‚
 		*/
 		//printf("%s(%d):<%s> \n", __FILE__, __LINE__, __FUNCTION__);
 		pthread_attr_t attr;
 		int ret = pthread_attr_init(&attr);
 		if (ret != 0) return -1;
-		//detachÄ£Ê½ n
+		//detachæ¨¡å¼ n
 		ret = pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 		if (ret != 0) return -2;
-		//Ö»ºÍ½ø³ÌÄÚ¾ºÕù
-		ret = pthread_attr_setscope(&attr, PTHREAD_SCOPE_SYSTEM);//Ä¿Ç°½øÊµÏÖÁËÕâÒ»¸ö
+		//åªå’Œè¿›ç¨‹å†…ç«äº‰
+		ret = pthread_attr_setscope(&attr, PTHREAD_SCOPE_SYSTEM);//ç›®å‰è¿›å®ç°äº†è¿™ä¸€ä¸ª
 		if (ret != 0) return -3;
 		ret = pthread_create(&m_thread, &attr, CThread::ThreadEntry, this);
 		if (ret != 0) return -4;
@@ -73,7 +73,7 @@ public:
 			if (ret == ETIMEDOUT)
 			{
 				pthread_detach(thread);
-				//ÄãÒªÔÚÏß³ÌÖĞ×Ô¼º´¦ÀíÕâ¸öĞÅºÅÁ¿
+				//ä½ è¦åœ¨çº¿ç¨‹ä¸­è‡ªå·±å¤„ç†è¿™ä¸ªä¿¡å·é‡
 				pthread_kill(thread, SIGUSR2);
 			}
 		}
@@ -99,7 +99,7 @@ public:
 
 	bool isValid() const { return m_thread != 0; }
 private:
-	//Àà³ÉÔ±º¯ÊıÄ¬ÈÏ_thiscall(»áÒşÊ½´«µİ¶ÔÏóµÄÖ¸Õë),Èç¹ûº¯ÊıÊÇ¾²Ì¬µÄ¾ÍÊÇ_stdcall
+	//ç±»æˆå‘˜å‡½æ•°é»˜è®¤_thiscall(ä¼šéšå¼ä¼ é€’å¯¹è±¡çš„æŒ‡é’ˆ),å¦‚æœå‡½æ•°æ˜¯é™æ€çš„å°±æ˜¯_stdcall
 	static void* ThreadEntry(void* arg)
 	{
 		CThread* thiz = (CThread*)arg;
@@ -141,7 +141,7 @@ private:
 		}
 		if (signo == SIGUSR2)
 		{
-			//Ïß³ÌÍË³ö
+			//çº¿ç¨‹é€€å‡º
 			pthread_exit(NULL);
 		}
 	}
@@ -163,7 +163,7 @@ private:
 private:
 	CFunctionBase* m_pfunction;
 	pthread_t m_thread;
-	bool m_bpause;//true:ÔİÍ£ fasle:ÔËĞĞÖĞ
+	bool m_bpause;//true:æš‚åœ fasle:è¿è¡Œä¸­
 	static std::map<pthread_t, CThread*> m_mapThread;
 
 };

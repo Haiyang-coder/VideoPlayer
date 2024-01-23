@@ -18,7 +18,7 @@ public:
 	explicit EpollData(uint32_t u32) { m_data.u32 = u32; }
 	EpollData(const EpollData& epoll) 
 	{ 
-		m_data.u64 = epoll.m_data.u64;//ÁªºÏÌåµÄ¸³Öµ£¬Ö±½Ó¸ø×î´óµÄ¸³Öµ
+		m_data.u64 = epoll.m_data.u64;//è”åˆä½“çš„èµ‹å€¼ï¼Œç›´æ¥ç»™æœ€å¤§çš„èµ‹å€¼
 	}
 	~EpollData(){}
 
@@ -51,7 +51,7 @@ public:
 		m_data.u64 = data;
 		return *this;
 	}
-	operator epoll_data_t() const { return m_data; }//Ò»¸öº¯ÊıÌå±»¶¨ÒåÎªconstºó£¬Ò»¸öconstµÄ¶ÔÏó²ÅÄÜµ÷ÓÃÕâ¸öº¯Êı
+	operator epoll_data_t() const { return m_data; }//ä¸€ä¸ªå‡½æ•°ä½“è¢«å®šä¹‰ä¸ºconståï¼Œä¸€ä¸ªconstçš„å¯¹è±¡æ‰èƒ½è°ƒç”¨è¿™ä¸ªå‡½æ•°
 	operator epoll_data_t()  { return m_data; }
 	operator epoll_data_t*()  { return &m_data; }
 	operator const epoll_data_t*() const { return &m_data; }
@@ -77,7 +77,7 @@ public:
 public:
 	operator int() const { return m_epoll; }
 public:
-	//´´½¨epoll
+	//åˆ›å»ºepoll
 	int Create(unsigned count)
 	{
 		if (m_epoll < 0)
@@ -92,7 +92,7 @@ public:
 		return SUCCESS;
 	}
 
-	//ÉèÖÃepollµÈ´ı
+	//è®¾ç½®epollç­‰å¾…
 	ssize_t WaitEvents(EPEvents& events, int timeout = 0)
 	{
 		if (m_epoll < 0) return m_epoll;
@@ -116,7 +116,7 @@ public:
 
 	}
 
-	//Ìí¼ÓeopollÊÂ¼ş
+	//æ·»åŠ eopolläº‹ä»¶
 	int Add(int fd, const EpollData& data = EpollData((void*)0), uint32_t events = EPOLLIN)
 	{
 		if (m_epoll < 0) return m_epoll;

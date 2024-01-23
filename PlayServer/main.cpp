@@ -1,4 +1,4 @@
-﻿#include <cstdio>
+#include <cstdio>
 #include<sys/types.h>
 #include<unistd.h>
 #include<memory.h>
@@ -11,16 +11,13 @@
 
 int LogTest()
 {
-	sleep(5);
-	printf("%s(%d):<%s>  pid = %d %s \n" , __FILE__, __LINE__, __FUNCTION__, getpid(), "trace start");
-	char buffer[] = "hell !d大大啊爱看";
-	TRACEI("here is log  大大 释放 \n");
-	//printf("%s(%d):<%s>  pid = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid());
-	//DUMPD((void*)buffer,sizeof(buffer));
-	//printf("%s(%d):<%s>  pid = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid());
-	//LOGE << 100 << "dfsf" << "打法" << 1515.5f << buffer;
-	//printf("%s(%d):<%s>  pid = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid());
-	return 0;
+	//整个流程，先让服务端建立连接，5s后连接  再过5s发送数据
+	sleep(2);
+	char buffer[] = "helldddddddd !d大大啊爱看\n";
+	TRACEI(buffer);
+	DUMPD((void*)buffer,sizeof(buffer));
+	LOGE << buffer  << "dsdfasfdasdfasfad==========中文测试\n";
+	
 }
 
 
@@ -102,8 +99,8 @@ int main()
 	//	return ret;
 	//}
 	//close(fd);
-	ret = procLog.SendFD(-1);
-	printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
+	//ret = procLog.SendFD(-1);
+	//printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
 	getchar();
     return 0;
 }

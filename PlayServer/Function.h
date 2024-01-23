@@ -13,19 +13,19 @@ private:
 };
 /**
 
-std::_Bindres_helper<int, _FUNCTION, _ARGS...>::type ÊÇ C++ ±ê×¼¿âÖÐµÄÒ»¸öÄ£°åÀàÐÍ£¬Í¨³£ÓÃÓÚÊµÏÖ°ó¶¨(bind)²Ù×÷¡£Õâ¸öÀàÐÍµÄÄ¿µÄÊÇÔÚ°ó¶¨²Ù×÷ÖÐ±£´æ°ó¶¨µÄ²ÎÊýºÍº¯Êý£¬ÒÔ±ãÔÚÉÔºóµ÷ÓÃ¡£
+std::_Bindres_helper<int, _FUNCTION, _ARGS...>::type æ˜¯ C++ æ ‡å‡†åº“ä¸­çš„ä¸€ä¸ªæ¨¡æ¿ç±»åž‹ï¼Œé€šå¸¸ç”¨äºŽå®žçŽ°ç»‘å®š(bind)æ“ä½œã€‚è¿™ä¸ªç±»åž‹çš„ç›®çš„æ˜¯åœ¨ç»‘å®šæ“ä½œä¸­ä¿å­˜ç»‘å®šçš„å‚æ•°å’Œå‡½æ•°ï¼Œä»¥ä¾¿åœ¨ç¨åŽè°ƒç”¨ã€‚
 
-ÈÃÎÒÃÇ²ð½âÕâ¸öÀàÐÍµÄ¸÷¸ö²¿·Ö£º
+è®©æˆ‘ä»¬æ‹†è§£è¿™ä¸ªç±»åž‹çš„å„ä¸ªéƒ¨åˆ†ï¼š
 
-int: Õâ±íÊ¾°ó¶¨²Ù×÷µÄ·µ»ØÀàÐÍ¡£ÔÚÕâÀï£¬ËüÊÇÒ»¸öÕûÊýÀàÐÍ£¬µ«Êµ¼ÊÉÏ£¬Õâ¿ÉÒÔÊÇÈÎºÎÄãÆÚÍûµÄ·µ»ØÀàÐÍ£¬¾ßÌåÈ¡¾öÓÚÄã°ó¶¨µÄº¯Êý¡£
+int: è¿™è¡¨ç¤ºç»‘å®šæ“ä½œçš„è¿”å›žç±»åž‹ã€‚åœ¨è¿™é‡Œï¼Œå®ƒæ˜¯ä¸€ä¸ªæ•´æ•°ç±»åž‹ï¼Œä½†å®žé™…ä¸Šï¼Œè¿™å¯ä»¥æ˜¯ä»»ä½•ä½ æœŸæœ›çš„è¿”å›žç±»åž‹ï¼Œå…·ä½“å–å†³äºŽä½ ç»‘å®šçš„å‡½æ•°ã€‚
 
-_FUNCTION: ÕâÊÇ°ó¶¨µÄº¯Êý»ò¿Éµ÷ÓÃ¶ÔÏó¡£¿ÉÒÔÊÇÒ»¸öº¯ÊýÖ¸Õë¡¢º¯Êý¶ÔÏó»òÕßÊÇÒ»¸ölambda±í´ïÊ½¡£
+_FUNCTION: è¿™æ˜¯ç»‘å®šçš„å‡½æ•°æˆ–å¯è°ƒç”¨å¯¹è±¡ã€‚å¯ä»¥æ˜¯ä¸€ä¸ªå‡½æ•°æŒ‡é’ˆã€å‡½æ•°å¯¹è±¡æˆ–è€…æ˜¯ä¸€ä¸ªlambdaè¡¨è¾¾å¼ã€‚
 
-_ARGS...: ÕâÊÇ°ó¶¨²Ù×÷µÄ²ÎÊý¡£Ëü±íÊ¾¿ÉÒÔÓÐÁã¸ö»ò¶à¸ö²ÎÊý£¬¾ßÌåÈ¡¾öÓÚÄã°ó¶¨µÄº¯ÊýÐèÒªµÄ²ÎÊýÊýÁ¿¡£
+_ARGS...: è¿™æ˜¯ç»‘å®šæ“ä½œçš„å‚æ•°ã€‚å®ƒè¡¨ç¤ºå¯ä»¥æœ‰é›¶ä¸ªæˆ–å¤šä¸ªå‚æ•°ï¼Œå…·ä½“å–å†³äºŽä½ ç»‘å®šçš„å‡½æ•°éœ€è¦çš„å‚æ•°æ•°é‡ã€‚
 
-std::_Bindres_helper<...>::type: ÕâÊÇÒ»¸ö¸¨ÖúÀàÐÍ£¬ÓÃÓÚ±£´æºÍ¹ÜÀí°ó¶¨²Ù×÷µÄÐÅÏ¢£¬°üÀ¨·µ»ØÀàÐÍ¡¢º¯Êý»ò¿Éµ÷ÓÃ¶ÔÏóÒÔ¼°²ÎÊý¡£
+std::_Bindres_helper<...>::type: è¿™æ˜¯ä¸€ä¸ªè¾…åŠ©ç±»åž‹ï¼Œç”¨äºŽä¿å­˜å’Œç®¡ç†ç»‘å®šæ“ä½œçš„ä¿¡æ¯ï¼ŒåŒ…æ‹¬è¿”å›žç±»åž‹ã€å‡½æ•°æˆ–å¯è°ƒç”¨å¯¹è±¡ä»¥åŠå‚æ•°ã€‚
 
-×ÛºÏÆðÀ´£¬std::_Bindres_helper<int, _FUNCTION, _ARGS...>::type ±íÊ¾Ò»¸ö°ó¶¨²Ù×÷µÄÀàÐÍ£¬ÆäÖÐ°üº¬ÁË·µ»ØÀàÐÍ¡¢°ó¶¨µÄº¯Êý»ò¿Éµ÷ÓÃ¶ÔÏóÒÔ¼°Ïà¹ØµÄ²ÎÊýÐÅÏ¢¡£ÕâÍ¨³£ÊÇÔÚÊ¹ÓÃstd::bindº¯Êý½øÐÐº¯Êý°ó¶¨Ê±£¬ÓÃÓÚ±íÊ¾°ó¶¨µÄ½á¹ûÀàÐÍ¡£
+ç»¼åˆèµ·æ¥ï¼Œstd::_Bindres_helper<int, _FUNCTION, _ARGS...>::type è¡¨ç¤ºä¸€ä¸ªç»‘å®šæ“ä½œçš„ç±»åž‹ï¼Œå…¶ä¸­åŒ…å«äº†è¿”å›žç±»åž‹ã€ç»‘å®šçš„å‡½æ•°æˆ–å¯è°ƒç”¨å¯¹è±¡ä»¥åŠç›¸å…³çš„å‚æ•°ä¿¡æ¯ã€‚è¿™é€šå¸¸æ˜¯åœ¨ä½¿ç”¨std::bindå‡½æ•°è¿›è¡Œå‡½æ•°ç»‘å®šæ—¶ï¼Œç”¨äºŽè¡¨ç¤ºç»‘å®šçš„ç»“æžœç±»åž‹ã€‚
 */
 
 template<typename _FUNCTION, typename... _ARGS>

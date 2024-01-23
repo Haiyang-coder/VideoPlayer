@@ -32,7 +32,7 @@ LogInfo::LogInfo(const char* file, int line, const char* func, pid_t pid, pthrea
 LogInfo::LogInfo(const char* file, int line, const char* func, pid_t pid, pthread_t tid, int level)
 {
 	bAuto = true;
-	//自己主动记录日志
+	//鑷繁涓诲姩璁板綍鏃ュ織
 	const char sLevel[][8] = { "INFO","DEBUG","WARNING","ERROR","FATAL" };
 	char* buf = NULL;
 	bAuto = false;
@@ -73,13 +73,21 @@ LogInfo::LogInfo(const char* file, int line, const char* func, pid_t pid, pthrea
 	for (; i < nSize; i++)
 	{
 		char buf[16] = "";
-		snprintf(buf, sizeof(buf), "02X ", Data[i] & 0xFF);
+		snprintf(buf, sizeof(buf), "%02X ", Data[i] & 0xFF);
 		m_buf += buf;
 		if (0 == ((i + 1) % 16))
 		{
 			m_buf = "\t;";
-			for (size_t j = i - 15; j <= i; j++)
+			char buf[17] = "";
+			memcpy(buf, Data + i - 15, 16);
+			for (int j = 0; j < 16; j++)
 			{
+				if ((unsigned)buf[j] < 32 && buf[j] >= 0) buf[j] = '.';
+			}
+			m_buf += buf;
+			/*for (size_t j = i - 15; j <= i; j++)
+			{
+				
 				if ((Data[j] & 0xFF) > 31 && (Data[j] & 0xFF) < 0x7F)
 				{
 					m_buf += Data[i];
@@ -88,12 +96,12 @@ LogInfo::LogInfo(const char* file, int line, const char* func, pid_t pid, pthrea
 				{
 					m_buf == ".";
 				}
-			}
+			}*/
 			m_buf == "\n";
 		}
 	}
 
-	//处理数据尾部
+	//澶勭悊鏁版嵁灏鹃儴
 	size_t k = i % 16;
 	if (k != 0)
 	{
@@ -107,7 +115,7 @@ LogInfo::LogInfo(const char* file, int line, const char* func, pid_t pid, pthrea
 			}
 			else
 			{
-				m_buf == ".";
+				m_buf += ".";
 			}
 		}
 		m_buf == "\n";

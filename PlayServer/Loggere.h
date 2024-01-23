@@ -35,7 +35,16 @@ public:
 	}
 
 	template<typename T>
-	LogInfo& operator<< (const T& data);
+	LogInfo& operator<< (const T& data)
+	{
+		std::stringstream stream;
+		stream << data;
+		
+		m_buf += stream.str().c_str();
+		printf(m_buf);
+		return *this;
+	}
+
 
 private:
 	bool bAuto = false;
@@ -115,7 +124,7 @@ public:
 		return  0;
 	}
 
-	//����������־���̺��߳�ʹ�õ�
+	//给其他非日志进程和线程使用的
 	static void Trace(const LogInfo& info)
 	{
 		static thread_local CLocalSocket client;
@@ -138,7 +147,7 @@ public:
 			}
 		}
 		ret = client.Send(info);
-		printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno),ret);
+		printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno),ret);//这里ret零
 	}
 	static Buffer GetTimeStr()
 	{
@@ -176,6 +185,7 @@ private:
 			}
 			if (ret > 0)
 			{
+				//我在给你跑一边，我把连接和发送设置一个延时你看清楚一些
 				printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s \n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno));
 				size_t i = 0;
 				for (; i < ret; i++)
@@ -187,9 +197,11 @@ private:
 					}
 					if (events[i].events & EPOLLIN)
 					{
-						printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  epollin =%s\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), "============��⵽epollin�¼�");
+						char buff[] = "============检测到epollin事件=============================\n";
+						printf("%s", buff);
 						if (events[i].data.ptr == m_pServer)
 						{
+							//创建的新的接收数据的服务端
 							CSocketBase* pClient = NULL;
 							int r = m_pServer->Link(&pClient);
 							printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), r);
@@ -203,23 +215,32 @@ private:
 								delete pClient;
 								continue;
 							}
+							printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s \n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno));
 							auto it = mapClients.find(*pClient);
-							if (it->second != NULL)
+							printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s \n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno));
+							if (it->second != NULL && it != mapClients.end())
 							{
+								printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s \n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno));
 								delete it->second;
+
 							}
 							mapClients[*pClient] = pClient;
-
+							printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s \n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno));
+							//我看一下走没走玩这个if语句
+							//我好像找到问题了
+							//这个if好像卡在那里了，都没有走到这里是的，
+							//我加个日志看看哪里死了还是卡住了
+							printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s \n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno));
 						}
 						else
 						{
+							//没有进入到else中 也就是没有收到send，send的位置在哪
 							printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
 							CSocketBase* pClient = (CSocketBase*)events[i].data.ptr;
 							if (pClient != NULL)
 							{
 								Buffer data(1024 * 1024);
-								int r = pClient->Recv(data);
-								printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s \n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno));
+								int r = pClient->Recv(data);							
 								if (r <= 0)
 								{
 									printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
@@ -262,9 +283,13 @@ private:
 			return;
 		}
 		FILE* pfile = m_file;
-		fwrite((char*)data, 1, data.size(), pfile);
+		std::string str;
+		str.resize(data.size());
+		memcpy((char*)str.c_str(), data.c_str(), data.size());
+		printf("我要开始写入日志了 ==================================================== msg:%s\n", str.c_str());
+		fwrite((char*)str.c_str(), 1, str.size(), pfile);
 		fflush(pfile);
-		printf("%s", (char*)data);
+		printf("%s", data);
 	}
 		
 
@@ -293,18 +318,9 @@ private:
 #define LOGF LogInfo(__FILE__, __LINE__,__FUNCTION__, getpid(), pthread_self(),LOG_FATAL)
 
 //01 02 03 A1 ... ...
-#define DUMPI(data, size) LogInfo(__FILE__,__LINE__, __FUNCTION__, getpid(),pthread_self(), LOG_INFO, data, size)
-#define DUMPD(data, size) LogInfo(__FILE__,__LINE__, __FUNCTION__, getpid(),pthread_self(), LOG_DEBUG, data, size)
-#define DUMPW(data, size) LogInfo(__FILE__,__LINE__, __FUNCTION__, getpid(),pthread_self(), LOG_WARNING, data, size)
-#define DUMPE(data, size) LogInfo(__FILE__,__LINE__, __FUNCTION__, getpid(),pthread_self(), LOG_ERROR, data, size)
-#define DUMPF(data, size) LogInfo(__FILE__,__LINE__, __FUNCTION__, getpid(),pthread_self(), LOG_FATAL, data, size)
+#define DUMPI(data, size) CLoggerServer::Trace(LogInfo(__FILE__,__LINE__, __FUNCTION__, getpid(),pthread_self(), LOG_INFO, data, size))
+#define DUMPD(data, size) CLoggerServer::Trace(LogInfo(__FILE__,__LINE__, __FUNCTION__, getpid(),pthread_self(), LOG_DEBUG, data, size))
+#define DUMPW(data, size) CLoggerServer::Trace(LogInfo(__FILE__,__LINE__, __FUNCTION__, getpid(),pthread_self(), LOG_WARNING, data, size))
+#define DUMPE(data, size) CLoggerServer::Trace(LogInfo(__FILE__,__LINE__, __FUNCTION__, getpid(),pthread_self(), LOG_ERROR, data, size))
+#define DUMPF(data, size) CLoggerServer::Trace(LogInfo(__FILE__,__LINE__, __FUNCTION__, getpid(),pthread_self(), LOG_FATAL, data, size))
 #endif
-
-template<typename T>
-inline LogInfo& LogInfo::operator<<(const T& data)
-{
-	std::stringstream stream;
-	stream << data;
-	m_buf += stream.str();
-	return *this;
-}

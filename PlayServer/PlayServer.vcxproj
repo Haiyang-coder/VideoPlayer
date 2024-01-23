@@ -78,6 +78,7 @@
     <ClCompile Include="Loggere.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Thread.cpp" />
+    <ClCompile Include="ThreadPool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Loggere.h" />
@@ -86,6 +87,7 @@
     <ClInclude Include="Function.h" />
     <ClInclude Include="Process.h" />
     <ClInclude Include="Thread.h" />
+    <ClInclude Include="ThreadPool.h" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>
