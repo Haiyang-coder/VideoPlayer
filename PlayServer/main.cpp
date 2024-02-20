@@ -9,6 +9,7 @@
 #include"Process.h"
 #include"Loggere.h"
 #include"ThreadPool.h"
+#include"EdoyunPlayerServer.h"
 
 int LogTest()
 {
@@ -69,10 +70,7 @@ int CreateClientServer(CProcess* proc)
 	return 0;
 }
 
-
-
-
-int main()
+int oldtest()
 {
 	//开启守护进程
 	CProcess::SwitchDeamon();
@@ -157,5 +155,24 @@ int main()
 	pool.Close();
 	getchar();
 	procLog.SendFD(-1);
-    return 0;
+	return 0;
+}
+
+
+int main()
+{
+	int ret = 0;
+	CProcess::SwitchDeamon();
+	CProcess procLog;
+	procLog.SetEntryFunction(CreateLogServer, &procLog);
+	ret = procLog.CreateSubProcess();
+	ERR_RETURN(ret, -1);
+	CEdoyunPlayerServer business(2);
+	CServer server;
+	ret = server.Init(&business);
+	ERR_RETURN(ret, -2);
+	ret = server.Run();
+	ERR_RETURN(ret, -3);
+	
+	return 0;
 }

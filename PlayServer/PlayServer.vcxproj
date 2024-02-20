@@ -82,6 +82,7 @@
     <ClCompile Include="ThreadPool.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EdoyunPlayerServer.h" />
     <ClInclude Include="Loggere.h" />
     <ClInclude Include="Server.h" />
     <ClInclude Include="Socket.h" />

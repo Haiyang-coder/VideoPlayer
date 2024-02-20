@@ -8,7 +8,13 @@
 class CBusiness
 {
 public:
-	virtual int CBusinessProcess() = 0;
+	CBusiness()
+		:m_recvcallback(NULL),
+		m_connnectedcallback(NULL)
+	{
+		
+	}
+	virtual int CBusinessProcess(CProcess* proc) = 0;
 	template<typename _FUNCTION_, typename ..._ARGS_>
 	int SetConnectedcallback(_FUNCTION_ func, _ARGS_... args)
 	{
@@ -27,9 +33,11 @@ public:
 		return 0;
 
 	}
-private:
+protected:
+
 	CFunctionBase* m_connnectedcallback;
 	CFunctionBase* m_recvcallback;
+	unsigned m_count;
 };
 
 

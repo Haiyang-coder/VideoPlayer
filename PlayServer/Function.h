@@ -34,7 +34,7 @@ class CFunction : public CFunctionBase
 public:
 
 	CFunction(_FUNCTION func, _ARGS... args)
-		:m_binder(std::forward<_FUNCTION>(func), std::forward<_ARGS...>(args)...)
+		:m_binder(std::forward<_FUNCTION>(func), std::forward<_ARGS>(args)...)
 	{
 
 	}
