@@ -78,7 +78,7 @@ public:
 			printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
 			return -3;
 		}
-		m_pServer = new CLocalSocket();
+		m_pServer = new CSocket();
 		if (m_pServer == NULL)
 		{
 			Close();
@@ -127,7 +127,7 @@ public:
 	//给其他非日志进程和线程使用的
 	static void Trace(const LogInfo& info)
 	{
-		static thread_local CLocalSocket client;
+		static thread_local CSocket client;
 		printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s client=%d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), (int)client);
 		int ret = 0;
 		if (client == -1)
@@ -147,7 +147,12 @@ public:
 			}
 		}
 		ret = client.Send(info);
-		printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno),ret);//这里ret零
+		if (ret < 0)
+		{
+			printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %s\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), "发送失败了");//这里ret零
+		}
+		printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %s\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), "发送成功了");//这里ret零
+		
 	}
 	static Buffer GetTimeStr()
 	{
@@ -177,7 +182,7 @@ private:
 			m_epoll != -1 &&
 			m_pServer != NULL)
 		{
-			ssize_t ret = m_epoll.WaitEvents(events, 1);
+			ssize_t ret = m_epoll.WaitEvents(events, -1);
 			if (ret < 0)
 			{
 				printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
@@ -235,7 +240,6 @@ private:
 						else
 						{
 							//没有进入到else中 也就是没有收到send，send的位置在哪
-							printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
 							CSocketBase* pClient = (CSocketBase*)events[i].data.ptr;
 							if (pClient != NULL)
 							{
@@ -243,9 +247,10 @@ private:
 								int r = pClient->Recv(data);							
 								if (r <= 0)
 								{
-									printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
-									delete pClient;
+									printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), r);
 									mapClients[*pClient] = NULL;
+									delete pClient;
+									
 								}
 								else
 								{
@@ -289,7 +294,7 @@ private:
 		printf("我要开始写入日志了 ==================================================== msg:%s\n", str.c_str());
 		fwrite((char*)str.c_str(), 1, str.size(), pfile);
 		fflush(pfile);
-		printf("%s", data);
+		printf("日志写入结束了");
 	}
 		
 

@@ -43,6 +43,7 @@ enum SOCKATTR {
 	SOCK_ISSERVER = 1,//0是客户端 1是服务器 
 	SOCK_ISNOBLOCK = 2,//0是阻塞 1是非阻塞
 	SOCK_ISUDP = 4, //0是tcp 1是udp
+	SOCK_ISIP = 8,//1为IP协议，0表示本地套接字
 };
 
 class CSockParam
@@ -151,11 +152,14 @@ public:
 		m_status = 3;
 		if (m_socket != -1)
 		{
-			unlink(m_param.ip);
+			if(m_param.arrt & SOCK_ISSERVER && ((m_param.arrt & SOCK_ISIP) == 0))
+				//服务器的非ip
+				unlink(m_param.ip);
 			int fd = m_socket;
 			m_socket = -1;
 			close(fd);
 		}
+		return 0;
 	}
 	virtual operator int() { return m_socket; }
 	virtual operator int() const{ return m_socket; }
@@ -171,16 +175,16 @@ protected:
 };
 
 
-class CLocalSocket:public CSocketBase
+class CSocket:public CSocketBase
 {
 public:
-	CLocalSocket() : CSocketBase(){}
-	CLocalSocket(int sock):CSocketBase()
+	CSocket() : CSocketBase(){}
+	CSocket(int sock):CSocketBase()
 	{
 		m_socket = sock;
 	
 	}
-	virtual ~CLocalSocket()
+	virtual ~CSocket()
 	{
 		Close();
 	}
@@ -197,8 +201,15 @@ public:
 		int type = (m_param.arrt  & SOCK_ISUDP) ?  SOCK_DGRAM : SOCK_STREAM;
 		if (m_socket == -1)
 		{
-			printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno));
-			m_socket = socket(PF_LOCAL, type, 0);
+			if (param.arrt & SOCK_ISIP)
+			{
+				m_socket = socket(PF_INET, type, 0);
+			}
+			else
+			{
+				m_socket = socket(PF_LOCAL, type, 0);
+			}
+			
 		}
 		else
 		{
@@ -208,20 +219,25 @@ public:
 		int ret = 0;
 		if (m_param.arrt & SOCK_ISSERVER)
 		{
-			//跳转的不准 往下拉
-			printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno));
-			ret = bind(m_socket, m_param.addrun(), sizeof(sockaddr_un));
+			if (param.arrt & SOCK_ISIP)
+			{
+				ret = bind(m_socket, m_param.addrin(), sizeof(sockaddr_in));
+			}
+			else
+			{
+				ret = bind(m_socket, m_param.addrun(), sizeof(sockaddr_un));
+				
+			}
 			if (ret == -1)
 			{
 				return -3;
-			}	
+			}
 			ret = listen(m_socket, 32);
 			if (ret == -1) return -4;
 		}
 
 		if (m_param.arrt & SOCK_ISNOBLOCK)
 		{
-			printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno));
 			int option = fcntl(m_socket, F_GETFL);
 			if (option < 0) return -5;
 			option |= O_NONBLOCK;
@@ -230,7 +246,6 @@ public:
 		}
 		if (m_status == 0)
 		{
-			printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno));
 			m_status = 1;
 		}
 		printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  m_socket = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), m_socket);
@@ -248,14 +263,21 @@ public:
 				return -2;
 			}
 			CSockParam param;
-			sockaddr_un addr_un;
-			socklen_t len = sizeof(addr_un);
-			int fd = accept(m_socket, param.addrun(), &len);
-			//稍等 我看一下线程号 是对 就是这里 accpet成功了
-			printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  m_socket = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), m_socket);
+			
+			int fd = -1;
+			if (m_param.arrt & SOCK_ISIP)
+			{
+				param.arrt |= SOCK_ISIP;
+				socklen_t len = sizeof(sockaddr_in);
+				fd = accept(m_socket, param.addrin(), &len);
+			}
+			else
+			{
+				socklen_t len = sizeof(sockaddr_un);
+				fd = accept(m_socket, param.addrun(), &len);
+			}
 			if (fd == -1) return -3;
-			//这里就是我说的 appcet完了之后 又创建了一个收数据的socket
-			*ppClient = new CLocalSocket(fd);
+			*ppClient = new CSocket(fd);
 			if (*ppClient == NULL)
 			{
 				return -4;
@@ -271,7 +293,15 @@ public:
 		}
 		else
 		{
-			ret = connect(m_socket, m_param.addrun(), sizeof(sockaddr_un));
+			if (m_param.arrt & SOCK_ISIP)
+			{
+				ret = connect(m_socket, m_param.addrin(), sizeof(sockaddr_in));
+			}
+			else
+			{
+				ret = connect(m_socket, m_param.addrun(), sizeof(sockaddr_un));
+			}
+			
 			if (ret != 0) return -6;
 		}
 		m_status = 2;

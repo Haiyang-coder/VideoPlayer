@@ -105,7 +105,10 @@ LogInfo::LogInfo(const char* file, int line, const char* func, pid_t pid, pthrea
 	size_t k = i % 16;
 	if (k != 0)
 	{
-		for (size_t j = 0; j < 16 - k; j++) m_buf += "   ";
+		for (size_t j = 0; j < 16 - k; j++)
+		{
+			m_buf += "   ";
+		}
 		m_buf = "\t;";
 		for (size_t j = i - 15; j <= i; j++)
 		{
@@ -120,6 +123,7 @@ LogInfo::LogInfo(const char* file, int line, const char* func, pid_t pid, pthrea
 		}
 		m_buf == "\n";
 	}
+
 }
 
 LogInfo::~LogInfo()

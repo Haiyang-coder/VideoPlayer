@@ -8,15 +8,17 @@
 #include <csignal>
 #include"Process.h"
 #include"Loggere.h"
+#include"ThreadPool.h"
 
 int LogTest()
 {
 	//整个流程，先让服务端建立连接，5s后连接  再过5s发送数据
-	sleep(2);
+	sleep(1);
 	char buffer[] = "helldddddddd !d大大啊爱看\n";
 	TRACEI(buffer);
-	DUMPD((void*)buffer,sizeof(buffer));
-	LOGE << buffer  << "dsdfasfdasdfasfad==========中文测试\n";
+	//DUMPD((void*)buffer,sizeof(buffer));
+	//LOGE << buffer  << "dsdfasfdasdfasfad==========中文测试\n";
+	return 0;
 	
 }
 
@@ -36,7 +38,7 @@ int CreateLogServer(CProcess* proc)
 	while (true)
 	{
 		ret = proc->RecvFd(fd);
-		if (fd <= -1 )
+		if (fd <= 0 )
 		{
 			break;
 		}
@@ -101,6 +103,59 @@ int main()
 	//close(fd);
 	//ret = procLog.SendFD(-1);
 	//printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
+
+	CThreadPool pool;
+	ret = pool.Start(4);
+	printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
+	ret = pool.AddTask(LogTest);
+	printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
+	ret = pool.AddTask(LogTest);
+	printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
+	ret = pool.AddTask(LogTest);
+	printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
+	ret = pool.AddTask(LogTest);
+	printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
+	ret = pool.AddTask(LogTest);
+	printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
+	printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
+	ret = pool.AddTask(LogTest);
+	printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
+	ret = pool.AddTask(LogTest);
+	printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
+	ret = pool.AddTask(LogTest);
+	printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
+	ret = pool.AddTask(LogTest);
+	printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
+	ret = pool.AddTask(LogTest);
+	printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
+	ret = pool.AddTask(LogTest);
+	printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
+	ret = pool.AddTask(LogTest);
+	printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
+	ret = pool.AddTask(LogTest);
+	printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
+	ret = pool.AddTask(LogTest);
+	printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
+	ret = pool.AddTask(LogTest);
+	printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
+	printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
+	ret = pool.AddTask(LogTest);
+	printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
+	ret = pool.AddTask(LogTest);
+	printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
+	ret = pool.AddTask(LogTest);
+	printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
+	ret = pool.AddTask(LogTest);
+	printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
+	ret = pool.AddTask(LogTest);
+	printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
+	printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
+
+
+
 	getchar();
+	pool.Close();
+	getchar();
+	procLog.SendFD(-1);
     return 0;
 }

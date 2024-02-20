@@ -1,5 +1,8 @@
 #pragma once
 #include"Function.h"
+#include <sys/stat.h>
+
+
 
 class CProcess
 {

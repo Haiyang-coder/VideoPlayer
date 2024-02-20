@@ -102,7 +102,6 @@ public:
 		{
 			if (errno == EINTR || errno == EAGAIN)
 			{
-				printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
 				return 0;
 			}
 			return -2;
