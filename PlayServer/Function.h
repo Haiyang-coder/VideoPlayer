@@ -1,12 +1,19 @@
 #pragma once
 #include<functional>
-
+#include<sys/types.h>
+#include<unistd.h>
+class CSocketBase;
+class Buffer;
+//虚函数和模板函数不能通用：虚函数特性和模板函数特性不能同时存在
+//但是一个模板类可以有虚函数
 class CFunctionBase
 {
 public:
 	CFunctionBase() {}
 	virtual ~CFunctionBase() {}
-	virtual int operator()() = 0;
+	virtual int operator()() { return -1; }
+	virtual int operator()(CSocketBase*) { return -1; }
+	virtual int operator()(CSocketBase*, const Buffer&) { return -1; }
 
 private:
 
@@ -44,8 +51,11 @@ public:
 	{
 		return m_binder();
 	}
-	 
 
 private:
 
 };
+
+
+
+

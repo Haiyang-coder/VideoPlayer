@@ -83,7 +83,7 @@ int CServer::ThreadFunc()
                        CSocketBase* pClient = NULL;
                        ret = m_server->Link(&pClient);
                        if (ret != 0) continue;
-                       ret = m_process.SendFD(*pClient);
+                       ret = m_process.SendSocket(*pClient, *pClient);
                        if (ret != 0)
                        {
                            TRACEE("send client %d failed", (int)*pClient);

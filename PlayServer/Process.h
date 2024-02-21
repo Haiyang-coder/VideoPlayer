@@ -1,6 +1,8 @@
 #pragma once
 #include"Function.h"
 #include <sys/stat.h>
+#include <netinet/in.h>
+
 
 
 
@@ -74,8 +76,6 @@ public:
 		msg.msg_control = cmsg;
 		msg.msg_controllen = cmsg->cmsg_len;
 		int ret = sendmsg(pipes[1], &msg, 0);
-		if (ret < 0) return ret;
-
 		delete cmsg;
 		return ret;
 	}
@@ -107,6 +107,71 @@ public:
 			return -2;
 		}
 		fd = *(int*)CMSG_DATA(cmsg);
+		delete cmsg;
+		return 0;
+	}
+
+
+	int SendSocket(int fd, const sockaddr_in* addrin)
+	{
+		//在主进程完成
+		msghdr msg;
+		iovec iov[2];
+		char buf[2][10] = { "sllo","senher" };
+		iov[0].iov_base = (void*)addrin;
+		iov[0].iov_len = sizeof(sockaddr_in);
+		iov[1].iov_base = buf[1];
+		iov[1].iov_len = sizeof(buf[1]);
+		msg.msg_iov = iov;
+		msg.msg_iovlen = 2;
+
+		cmsghdr* cmsg = new cmsghdr;
+		memset(cmsg, 0, CMSG_LEN(sizeof(int)));
+		cmsg->cmsg_len = CMSG_LEN(sizeof(int));
+		cmsg->cmsg_level = SOL_SOCKET;
+		cmsg->cmsg_type = SCM_RIGHTS;
+		*(int*)CMSG_DATA(cmsg) = fd;
+		msg.msg_control = cmsg;
+		msg.msg_controllen = cmsg->cmsg_len;
+		int ret = sendmsg(pipes[1], &msg, 0);
+		if (ret < 0)
+		{
+			delete cmsg;
+			return ret;
+		}
+		delete cmsg;
+		return ret;
+	}
+
+	int RecvSocket(int& fd, sockaddr_in* addrin)
+	{
+		msghdr msg;
+		iovec iov[2];
+		char buf[][10] = { "","" };
+		iov[0].iov_base = addrin;
+		iov[0].iov_len = sizeof(addrin);
+		iov[1].iov_base = buf[1];
+		iov[1].iov_len = sizeof(buf[1]);
+		msg.msg_iov = iov;
+		msg.msg_iovlen = 2;
+
+		cmsghdr* cmsg = new cmsghdr();
+		if (cmsg == NULL) return -1;
+		memset(cmsg, 0, CMSG_LEN(sizeof(int)));
+		cmsg->cmsg_len = CMSG_LEN(sizeof(int));
+		cmsg->cmsg_level = SOL_SOCKET;
+		cmsg->cmsg_type = SCM_RIGHTS;
+		msg.msg_control = cmsg;
+		msg.msg_controllen = CMSG_LEN(sizeof(int));
+		ssize_t ret = recvmsg(pipes[0], &msg, 0);
+		if (ret == -1)
+		{
+			delete cmsg;
+			return -2;
+		}
+		fd = *(int*)CMSG_DATA(cmsg);
+		delete cmsg;
+		return 0;
 	}
 	static int SwitchDeamon()
 	{

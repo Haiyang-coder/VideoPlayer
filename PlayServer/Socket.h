@@ -75,6 +75,13 @@ public:
 		strcpy(m_addr_un.sun_path, path);
 		this->arrt = attr;
 	}
+	//网络套接字的初始化
+	CSockParam(const sockaddr_in* addrin, int attr)
+	{
+		this->arrt = attr;
+		memcpy(&m_addr_in, addrin, sizeof(addrin));
+
+	}
 	~CSockParam(){}
 	CSockParam(const CSockParam& data)
 	{
@@ -163,6 +170,14 @@ public:
 	}
 	virtual operator int() { return m_socket; }
 	virtual operator int() const{ return m_socket; }
+	virtual operator const sockaddr_in*()  const
+	{
+		return &m_param.m_addr_in; 
+	}
+	virtual operator  sockaddr_in* ()
+	{
+		return &m_param.m_addr_in;
+	}
 protected:
 	//套接字描述符 -1
 	int m_socket;

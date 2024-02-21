@@ -13,6 +13,7 @@ public:
 	CEdoyunPlayerServer(unsigned count):CBusiness()
 	{
 		m_count = count;
+		
 	}
 	~CEdoyunPlayerServer()
 	{
@@ -33,6 +34,10 @@ public:
 	{
 		int sock = 0;
 		int ret = 0;
+		ret = SetConnectedcallback(&CEdoyunPlayerServer::Connected, this, std::placeholders::_1);
+		ERR_RETURN(ret, -1);
+		ret = SetRecvcallback(&CEdoyunPlayerServer::Recived, this, std::placeholders::_1, std::placeholders::_2);
+		ERR_RETURN(ret, -2)
 		ret = m_epoll.Create(m_count);
 		if (ret < 0)
 		{
@@ -48,19 +53,22 @@ public:
 			ret = m_pool.AddTask(&CEdoyunPlayerServer::ThreadFunc, this);
 			if (ret < 0) return -3;
 		}
+		sockaddr_in addrin;
 		while (m_epoll != -1)
 		{
-			ret = proc->RecvFd(sock);
+			ret = proc->RecvSocket(sock,&addrin);
 			if (ret < 0 || sock == 0)
 			{
 				break;
 			}
 			CSocketBase* pClient = new CSocket(sock);
 			if (pClient == NULL) continue;
+			ret = pClient->Init(CSockParam(&addrin, SOCK_ISIP));
+			WARN_CONTINUE(ret);
 			ret = m_epoll.Add(sock, EpollData((void*)pClient));
 			if (m_connnectedcallback)
 			{
-				(*m_connnectedcallback)();
+				(*m_connnectedcallback)(pClient);
 			}
 			WARN_CONTINUE(ret);
 		}
@@ -91,7 +99,7 @@ private:
 							WARN_CONTINUE(ret);
 							if (m_recvcallback)
 							{
-								(*m_recvcallback)();
+								(*m_recvcallback)(pClient, data);
 							}
 						}
 						
@@ -109,10 +117,22 @@ private:
 		}
 		return 0;
 	}
+
+
+	int Connected(CSocketBase* pClient)
+	{
+		return 0;
+	}
+
+	int Recived(CSocketBase* pClient, const Buffer& data)
+	{
+		return 0;
+	}
 private:
 	CEpoll m_epoll;
 	CThreadPool m_pool;
 	std::map<int, CSocketBase*> m_mapClients;
 	unsigned m_count;
+
 
 };
