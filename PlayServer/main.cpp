@@ -10,6 +10,7 @@
 #include"Loggere.h"
 #include"ThreadPool.h"
 #include"EdoyunPlayerServer.h"
+#include"HttpParser.h"
 
 int LogTest()
 {
@@ -158,8 +159,7 @@ int oldtest()
 	return 0;
 }
 
-
-int main()
+int server_test()
 {
 	int ret = 0;
 	CProcess::SwitchDeamon();
@@ -173,6 +173,31 @@ int main()
 	ERR_RETURN(ret, -2);
 	ret = server.Run();
 	ERR_RETURN(ret, -3);
-	
+
+	return 0;
+}
+int main()
+{
+	const char* str = "";
+	CHttpParser parser;
+	size_t size = parser.Parser(str);
+	if (parser.Errno() != 0)
+	{
+		printf("error = %d", parser.Errno());
+		return -1;
+	}
+	if (size != 365)
+	{
+		printf("size = %lld", size);
+		return -2;
+	}
+	http_test();
+}
+
+int http_test()
+{
+
+
+
 	return 0;
 }
