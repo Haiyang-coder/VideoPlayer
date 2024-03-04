@@ -75,30 +75,38 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
+    <ClCompile Include="DatabaseHelper.cpp" />
     <ClCompile Include="HttpParser.cpp" />
     <ClCompile Include="http_parser.c" />
     <ClCompile Include="Loggere.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Server.cpp" />
+    <ClCompile Include="Sqlite3Client.cpp" />
+    <ClCompile Include="sqlite3\sqlite3.c" />
     <ClCompile Include="Thread.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DataBaseHelper.h" />
     <ClInclude Include="EdoyunPlayerServer.h" />
     <ClInclude Include="HttpParser.h" />
     <ClInclude Include="http_parser.h" />
     <ClInclude Include="Loggere.h" />
+    <ClInclude Include="Public.h" />
     <ClInclude Include="Server.h" />
     <ClInclude Include="Socket.h" />
     <ClInclude Include="Epoll.h" />
     <ClInclude Include="Function.h" />
     <ClInclude Include="Process.h" />
+    <ClInclude Include="Sqlite3Client.h" />
+    <ClInclude Include="sqlite3\sqlite3.h" />
+    <ClInclude Include="sqlite3\sqlite3ext.h" />
     <ClInclude Include="Thread.h" />
     <ClInclude Include="ThreadPool.h" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>
-      <LibraryDependencies>pthread;m;</LibraryDependencies>
+      <LibraryDependencies>pthread;m;dl;</LibraryDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
