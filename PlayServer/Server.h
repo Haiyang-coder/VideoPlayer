@@ -87,7 +87,6 @@ public:
 	//	//m_connnectedcallback = new CConnetFunction<_FUNCTION_, _ARGS_...>(func, args...);
 	//	if (m_recvcallback == NULL) return -1;
 	//	return 0;
-
 	//}
 protected:
 
