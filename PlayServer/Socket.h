@@ -6,6 +6,7 @@
 #include<arpa/inet.h>
 #include<string>
 #include<fcntl.h>
+#include"Public.h"
 
 
 enum SOCKATTR {

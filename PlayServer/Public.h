@@ -1,6 +1,6 @@
 #pragma once
-#include"Socket.h"
 #include<string.h>
+#include<string>
 
 class Buffer : public std::string
 {

@@ -283,8 +283,7 @@ _sqlite3_field_::_sqlite3_field_()
 	nType = TYPE_NULL;
 	Value.Double = 0.0;
 }
-_sqlite3_field_::_sqlite3_field_(int ntype,
-	const Buffer& name, unsigned attr, const Buffer&
+_sqlite3_field_::_sqlite3_field_(int ntype, const Buffer& name, unsigned attr, const Buffer&
 	type, const Buffer& size, const Buffer&
 	default_, const Buffer& check)
 {
@@ -452,13 +451,39 @@ _sqlite3_field_::operator const Buffer() const
 {
 	return '"' + Name + '"';
 }
-Buffer _sqlite3_field_::Str2Hex(const Buffer&
-	data) const
+Buffer _sqlite3_field_::Str2Hex(const Buffer& data) const
 {
 	const char* hex = "0123456789ABCDEF";
 	std::stringstream ss;
 	for (auto ch : data)
-		ss << hex[(unsigned char)ch >> 4] <<
-		hex[(unsigned char)ch & 0xF];
+		ss << hex[(unsigned char)ch >> 4] << hex[(unsigned char)ch & 0xF];
 	return ss.str();
 }
+
+
+//class user_test:public _sqlite3_table_
+//{
+//public:
+//	virtual PTable Copy() const 
+//	{
+//		return PTable(new user_test(*this));
+//	}
+//	user_test() : _sqlite3_table_()
+//	{
+//		Name = "user_test";
+//		{
+//			PField field(new )
+//		}
+//	}
+//
+//private:
+//
+//};
+//
+//user_test:public _sqlite3_table_::user_test:public _sqlite3_table_()
+//{
+//}
+//
+//user_test:public _sqlite3_table_::~user_test:public _sqlite3_table_()
+//{
+//}

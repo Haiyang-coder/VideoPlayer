@@ -1,7 +1,7 @@
 #pragma once
 #include "Public.h"
-#include "DatabaseHelper.h"
 #include "sqlite3/sqlite3.h"
+#include"DataBaseHelper.h"
 class CSqlite3Client
 	:public CDatabaseClient
 {

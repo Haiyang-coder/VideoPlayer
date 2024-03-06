@@ -2,6 +2,7 @@
 #include"http_parser.h"
 #include"Socket.h"
 #include<map>
+#include"Public.h"
 class CHttpParser
 {
 public:

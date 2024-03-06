@@ -176,6 +176,14 @@ int server_test()
 
 	return 0;
 }
+
+int http_test()
+{
+
+
+
+	return 0;
+}
 int main()
 {
 	const char* str = "";
@@ -194,10 +202,3 @@ int main()
 	http_test();
 }
 
-int http_test()
-{
-
-
-
-	return 0;
-}
