@@ -62,7 +62,7 @@ public:
 	//TODO:参数进行优化
 	virtual Buffer Modify(const _Table_& values)
 		= 0;
-	virtual Buffer Query() = 0;
+	virtual Buffer Query(const Buffer& condition = "") = 0;
 	//创建一个基于表的对象
 	virtual PTable Copy()const = 0;
 	virtual void ClearFieldUsed() = 0;
@@ -82,6 +82,7 @@ enum {
 	SQL_CONDITION = 4//查询条件列
 };
 enum {
+	NONE = 0,
 	NOT_NULL = 1,
 	DEFAULT = 2,
 	UNIQUE = 4,
@@ -139,6 +140,14 @@ public:
 	Buffer Default;
 	Buffer Check;
 public:
+public:
 	//操作条件
 	unsigned Condition;
+	union {
+		bool Bool;
+		int Integer;
+		double Double;
+		Buffer* String;
+	}Value;
+	int nType;
 };

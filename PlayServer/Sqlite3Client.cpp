@@ -247,7 +247,7 @@ Buffer _sqlite3_table_::Modify(const _Table_& values)
 	return sql;
 }
 
-Buffer _sqlite3_table_::Query()
+Buffer _sqlite3_table_::Query(const Buffer& condition = "")
 {//SELECT 列名1 ,列名2 ,... ,列名n FROM 表全名;
 	Buffer sql = "SELECT ";
 	for (size_t i = 0; i < FieldDefine.size(); i++)
@@ -257,6 +257,10 @@ Buffer _sqlite3_table_::Query()
 		sql += '"' + FieldDefine[i]->Name + "\"";
 	}
 	sql += " FROM " + (Buffer)*this + ";";
+	if (condition.size() > 0) {
+		sql += " WHERE " + condition;
+	}
+	sql += ";";
 	TRACEI("sql = %s", (char*)sql);
 	return sql;
 }

@@ -1,5 +1,6 @@
 #include "MysqlClient.h"
 #include <sstream>
+#include "Loggere.h"
 int CMysqlClient::Connect(const KeyValue& args)
 {
 	if (m_bInit)return -1;
@@ -11,7 +12,8 @@ int CMysqlClient::Connect(const KeyValue& args)
 		atoi(args.at("port")),
 		NULL, 0);
 	if ((ret == NULL) && (mysql_errno(&m_db) !=0)) {
-		printf("%s %s\n", __FUNCTION__, mysql_errno(&m_db));
+		printf("%s %d %s\n", __FUNCTION__, mysql_errno(&m_db), mysql_error(&m_db));
+		TRACEE("%d %s", mysql_errno(&m_db), mysql_error(&m_db));
 		mysql_close(&m_db);
 		bzero(&m_db, sizeof(m_db));
 		return -3;
@@ -94,7 +96,7 @@ int CMysqlClient::Close()
 bool CMysqlClient::IsConnected()
 {
 	return m_bInit;
-}
+} 
 _mysql_table_::_mysql_table_(const _mysql_table_ & table)
 {
 	Database = table.Database;
@@ -207,15 +209,19 @@ Buffer _mysql_table_::Modify(const _Table_& values)
 	printf("sql = %s\n", (char*)sql);
 	return sql;
 }
-Buffer _mysql_table_::Query()
+Buffer _mysql_table_::Query(const Buffer& condition)
 {
 	Buffer sql = "SELECT ";
-	for (size_t i = 0; i < FieldDefine.size();i++)
+	for (size_t i = 0; i < FieldDefine.size(); i++)
 	{
 		if (i > 0)sql += ',';
-		sql += '`' + FieldDefine[i]->Name + "`";
+		sql += '`' + FieldDefine[i]->Name + "` ";
 	}
-	sql += " FROM " + (Buffer)*this + ";";
+	sql += " FROM " + (Buffer)*this + " ";
+	if (condition.size() > 0) {
+		sql += " WHERE " + condition;
+	}
+	sql += ";";
 	printf("sql = %s\n", (char*)sql);
 	return sql;
 }

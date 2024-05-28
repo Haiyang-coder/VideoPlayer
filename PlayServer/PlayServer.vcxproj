@@ -77,9 +77,13 @@
   <ItemGroup>
     <ClCompile Include="HttpParser.cpp" />
     <ClCompile Include="http_parser.c" />
+    <ClCompile Include="jsoncpp\json_reader.cpp" />
+    <ClCompile Include="jsoncpp\json_value.cpp" />
+    <ClCompile Include="jsoncpp\json_writer.cpp" />
     <ClCompile Include="Loggere.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MysqlClient.cpp" />
+    <ClCompile Include="Crypto.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="Sqlite3Client.cpp" />
     <ClCompile Include="sqlite3\sqlite3.c" />
@@ -91,8 +95,20 @@
     <ClInclude Include="EdoyunPlayerServer.h" />
     <ClInclude Include="HttpParser.h" />
     <ClInclude Include="http_parser.h" />
+    <ClInclude Include="jsoncpp\allocator.h" />
+    <ClInclude Include="jsoncpp\assertions.h" />
+    <ClInclude Include="jsoncpp\config.h" />
+    <ClInclude Include="jsoncpp\forwards.h" />
+    <ClInclude Include="jsoncpp\json.h" />
+    <ClInclude Include="jsoncpp\json_features.h" />
+    <ClInclude Include="jsoncpp\json_tool.h" />
+    <ClInclude Include="jsoncpp\reader.h" />
+    <ClInclude Include="jsoncpp\value.h" />
+    <ClInclude Include="jsoncpp\version.h" />
+    <ClInclude Include="jsoncpp\writer.h" />
     <ClInclude Include="Loggere.h" />
     <ClInclude Include="MysqlClient.h" />
+    <ClInclude Include="Crypto.h" />
     <ClInclude Include="Public.h" />
     <ClInclude Include="Server.h" />
     <ClInclude Include="Socket.h" />
@@ -105,9 +121,13 @@
     <ClInclude Include="Thread.h" />
     <ClInclude Include="ThreadPool.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="jsoncpp\.WeDrive" />
+    <None Include="jsoncpp\json_valueiterator.inl" />
+  </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>
-      <LibraryDependencies>pthread;m;dl;mysqlclient;</LibraryDependencies>
+      <LibraryDependencies>pthread;m;dl;mysqlclient;crypto;</LibraryDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

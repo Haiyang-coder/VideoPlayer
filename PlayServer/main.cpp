@@ -84,25 +84,7 @@ int oldtest()
 		return ret;
 	}
 	LogTest();
-	//procClient.SetEntryFunction(CreateClientServer, &procClient);
-	//ret = procClient.CreateSubProcess();
-	//if (ret < 0)
-	//{
-	//	printf("%s(%d):<%s>  pid = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid());
-	//	return ret;
-	//}
-	//int fd = open("./text.txt", O_RDWR | O_CREAT | O_APPEND);
-	//printf("%s(%d):<%s>  fd = %d\n", __FILE__, __LINE__, __FUNCTION__, fd);
-	//if (fd < 0) return -3;
-	//ret  = write(fd, "hello", 5);
-	//if (ret < 0)
-	//{
-	//	return ret;
-	//}
-	//close(fd);
-	//ret = procLog.SendFD(-1);
-	//printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
-
+	
 	CThreadPool pool;
 	ret = pool.Start(4);
 	printf("%s(%d):<%s>  pid = %d errno = %d  msg:%s  ret = %d\n", __FILE__, __LINE__, __FUNCTION__, getpid(), errno, strerror(errno), ret);
